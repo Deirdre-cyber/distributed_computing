@@ -4,40 +4,68 @@ import java.io.*;
 /**
  * This class is a module which provides the application logic
  * for an Echo client using stream-mode socket.
+ * 
  * @author M. L. Liu
  */
 
 public class EchoClientHelper2 {
 
-   static final String endMessage = ".";
    private MyStreamSocket mySocket;
    private InetAddress serverHost;
    private int serverPort;
 
    EchoClientHelper2(String hostName,
-                     String portNum) throws SocketException,
-                     UnknownHostException, IOException {
-                                     
-  	   this.serverHost = InetAddress.getByName(hostName);
-  		this.serverPort = Integer.parseInt(portNum);
-      //Instantiates a stream-mode socket and wait for a connection.
-   	this.mySocket = new MyStreamSocket(this.serverHost,
-         this.serverPort); 
-/**/  System.out.println("Connection request made");
-   } // end constructor
-	
-   public String getEcho( String message) throws SocketException,
-      IOException{     
-      String echo = "";    
-      mySocket.sendMessage( message);
-	   // now receive the echo
-      echo = mySocket.receiveMessage();
-      return echo;
-   } // end getEcho
+         String portNum) throws SocketException,
+         UnknownHostException, IOException {
 
-   public void done( ) throws SocketException,
-                              IOException{
-      mySocket.sendMessage(endMessage);
-      mySocket.close( );
-   } // end done 
-} //end class
+      this.serverHost = InetAddress.getByName(hostName);
+      this.serverPort = Integer.parseInt(portNum);
+      // Instantiates a stream-mode socket and wait for a connection.
+      this.mySocket = new MyStreamSocket(this.serverHost,
+            this.serverPort);
+      /**/ System.out.println("Connection request made");
+   } // end constructor
+
+   public String login(String credentials) throws SocketException, IOException {
+      String login = "LOGIN " + credentials;
+      mySocket.sendMessage(login);
+      return mySocket.receiveMessage();
+   }
+
+   public String sendMessage(String userMessage) throws SocketException, IOException {
+
+      String message = "UPLOAD " + userMessage;
+      mySocket.sendMessage(message);
+      return mySocket.receiveMessage();
+   }
+
+   public String readMessage(String messageId) throws SocketException, IOException {
+
+      String message = "DOWNLOAD " + messageId;
+
+      mySocket.sendMessage(messageId);
+      message = mySocket.receiveMessage();
+
+      return message;
+   }
+
+   public String readAllMessages() throws SocketException, IOException {
+      String message = "DOWNLOAD_ALL";
+
+      mySocket.sendMessage(message);
+      message = mySocket.receiveMessage();
+
+      return message;
+   }
+
+   public String logout() throws IOException {
+      String message = "LOGOUT";
+
+      mySocket.sendMessage(message);
+      message = mySocket.receiveMessage();
+
+      mySocket.close();
+      return message;
+      
+   }
+} // end class
