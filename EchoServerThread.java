@@ -17,9 +17,8 @@ class EchoServerThread implements Runnable {
 
    MyStreamSocket myDataSocket;
    private Logger log = Logger.getLogger("EchoServerThread");
-   //To store messages key = messageid and value = message
    private HashMap<Integer, String> messages;
-   private int messageId = 0;
+   private int messageId = 100;
 
    EchoServerThread(MyStreamSocket myDataSocket) {
       this.myDataSocket = myDataSocket;
