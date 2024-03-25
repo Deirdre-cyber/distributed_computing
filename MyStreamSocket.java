@@ -6,6 +6,10 @@ import java.io.*;
  * methods for sending and receiving messages
  * @author M. L. Liu
  */
+
+ // This class deals with the communication between clients and the server
+ // It handles sending and receiving messages over sockets
+
 public class MyStreamSocket extends Socket {
    private Socket  socket;
    private BufferedReader input;
