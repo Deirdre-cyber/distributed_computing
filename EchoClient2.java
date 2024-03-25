@@ -7,14 +7,13 @@ import java.util.logging.Logger;
  */
 public class EchoClient2 {
 
-   private static Logger log = Logger.getLogger("EchoClient2");
+   private static Logger log = Logger.getLogger(EchoClient2.class.getName());
 
    public static void main(String[] args) {
       InputStreamReader is = new InputStreamReader(System.in);
       BufferedReader br = new BufferedReader(is);
       try {
-         System.out.println("Welcome!\n" +
-            "What is the name of the server host?");
+         System.out.println("Welcome! \nWhat is the name of the server host?");
          String hostName = br.readLine();
          if (hostName.length() == 0) // if user did not enter a name
             hostName = "localhost";  //   use the default host name
@@ -42,7 +41,7 @@ public class EchoClient2 {
          }
 
          while (!done) {
-            System.out.println("Please choose an option:");
+            System.out.println("\nPlease choose an option:");
             System.out.println("1. Upload a message: ");
             System.out.println("2. Read a message: ");
             System.out.println("3. Read all messages: ");
@@ -59,7 +58,6 @@ public class EchoClient2 {
                case "2":
                   System.out.println("Enter the message id: ");
                   String messageId = br.readLine( );
-                  System.out.println("id entered" + messageId);  //DEBUG
                   System.out.println(helper.readMessage(messageId));
                   break;
                case "3":
@@ -67,10 +65,10 @@ public class EchoClient2 {
                   break;
                case "4":
                   done = true;
-                  helper.logout();
+                  System.out.println(helper.logout());
                   break;
                default:
-                  System.out.println("Invalid option. Please try again.");
+                  log.warning("Invalid option. Please try again.");
                   break;
             }
           }
