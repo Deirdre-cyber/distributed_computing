@@ -1,4 +1,7 @@
 import java.net.*;
+
+import javax.net.ssl.SSLSocket;
+
 import java.io.*;
 
 /**
@@ -42,30 +45,23 @@ public class EchoClientHelper2 {
    public String readMessage(String messageId) throws SocketException, IOException {
 
       String message = "DOWNLOAD " + messageId;
-
-      mySocket.sendMessage(messageId);
-      message = mySocket.receiveMessage();
-
-      return message;
+      mySocket.sendMessage(message);
+      return mySocket.receiveMessage();
    }
 
    public String readAllMessages() throws SocketException, IOException {
       String message = "DOWNLOAD_ALL";
-
       mySocket.sendMessage(message);
-      message = mySocket.receiveMessage();
-
-      return message;
+      return mySocket.receiveMessage();
    }
 
    public String logout() throws IOException {
       String message = "LOGOUT";
 
       mySocket.sendMessage(message);
-      message = mySocket.receiveMessage();
-
+      String response = mySocket.receiveMessage();
       mySocket.close();
-      return message;
+      return response;
       
    }
 } // end class
