@@ -1,6 +1,5 @@
+package client;
 import java.net.*;
-
-import javax.net.ssl.SSLSocket;
 
 import java.io.*;
 

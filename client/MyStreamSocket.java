@@ -1,14 +1,13 @@
+package client;
 import java.net.*;
-import java.util.logging.Logger;
 import java.io.*;
 
 public class MyStreamSocket extends Socket {
    private Socket  socket;
    private BufferedReader input;
    private PrintWriter output;
-   private static Logger log = Logger.getLogger(MyStreamSocket.class.getName());
 
-   MyStreamSocket(InetAddress acceptorHost, int acceptorPort ) throws SocketException, IOException{
+   public MyStreamSocket(InetAddress acceptorHost, int acceptorPort ) throws SocketException, IOException{
       socket = new Socket(acceptorHost, acceptorPort );
       setStreams( );
    }
@@ -37,9 +36,9 @@ public class MyStreamSocket extends Socket {
       // updated this to ensure correct parsing of messages with newlines
       while ((line = input.readLine( )) != null) {
          message.append(line);
-         if (!input.ready()) {
-            break;
-         }
+         // if (!input.ready()) {
+         //    break;
+         // }
          message.append("\n");
       }
       return message.toString();

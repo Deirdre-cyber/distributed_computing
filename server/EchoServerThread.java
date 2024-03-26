@@ -22,6 +22,7 @@ class EchoServerThread implements Runnable {
       try {
          while (!done) {
             message = myDataSocket.receiveMessage();
+            System.out.println("Received: " + message);
 
             if (message.startsWith("LOGIN")) {
                String credentials = message.substring(6);
