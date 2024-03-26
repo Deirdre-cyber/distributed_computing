@@ -1,6 +1,8 @@
 package client;
 import java.net.*;
 
+import javax.net.ssl.SSLSocket;
+
 import java.io.*;
 
 public class EchoClientHelper2 {
@@ -8,6 +10,17 @@ public class EchoClientHelper2 {
    private MyStreamSocket mySocket;
    private InetAddress serverHost;
    private int serverPort;
+
+   EchoClientHelper2(SSLSocket sslSocket) throws IOException {
+      try {
+         this.mySocket = new MyStreamSocket(sslSocket);
+         System.out.println("Connection request made");
+      } catch (UnknownHostException e) {
+         throw new IOException ("Unknown host: " + e.getMessage());
+      } catch (SocketException e) {
+         throw new IOException ("Unable to create socket." + e.getMessage());
+      }
+   }
 
    EchoClientHelper2(String hostName, String portNum) throws IOException {
       try {
@@ -64,15 +77,15 @@ public class EchoClientHelper2 {
       }
    }
 
-   public String logout() throws IOException {
-      String message = "LOGOUT";
+   public String quit() throws IOException {
+      String message = "QUIT";
       try{
          mySocket.sendMessage(message);
          String response = mySocket.receiveMessage();
          mySocket.close();
          return response;
       } catch (IOException e) {
-         throw new IOException("Error logging out: " + e.getMessage());
+         throw new IOException("Error quitting program: " + e.getMessage());
       }
    }
 }

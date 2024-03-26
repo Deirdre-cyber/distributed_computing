@@ -1,4 +1,5 @@
 package server;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -39,8 +40,9 @@ class EchoServerThread implements Runnable {
 
             } else if (message.startsWith("DOWNLOAD_ALL")) {
                downloadAll();
-            } else if (message.equals("LOGOUT")) {
-               myDataSocket.sendMessage("Logout successful");
+
+            } else if (message.equals("QUIT")) {
+               quit();
                done = true;
             } else {
                myDataSocket.sendMessage("Invalid command");
@@ -48,6 +50,14 @@ class EchoServerThread implements Runnable {
          }
       } catch (Exception ex) {
          log.severe("Exception caught in thread: " + ex);
+      }
+   }
+
+   private void quit() {
+      try {
+         myDataSocket.sendMessage("104 Quit successful\nGoodbye");
+      } catch (IOException e) {
+         log.severe("Error sending quit message: " + e.getMessage());
       }
    }
 
@@ -76,10 +86,11 @@ class EchoServerThread implements Runnable {
          }
       } catch (IOException e) {
          log.severe("Error sending message: " + e.getMessage());
-         }
       }
+   }
 
-      private void upload(String userMessage) {
+   private void upload(String userMessage) {
+      if (userMessage != null) {
          messages.put(messageId, userMessage);
          try {
             myDataSocket.sendMessage("201 Upload successful\nMessage ID: " + messageId);
@@ -87,7 +98,14 @@ class EchoServerThread implements Runnable {
          } catch (IOException e) {
             log.severe("Error sending message: " + e.getMessage());
          }
+      } else {
+         try {
+            myDataSocket.sendMessage("400 Bad Request\nAttempted to upload a null message.");
+         } catch (IOException e) {
+            log.severe("Error sending error message: " + e.getMessage());
+         }
       }
+   }
 
    private void login(String credentials) {
       try {
