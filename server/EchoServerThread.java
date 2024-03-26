@@ -89,8 +89,8 @@ class EchoServerThread implements Runnable {
       }
    }
 
-   private void upload(String userMessage) {
-      if (userMessage != null) {
+   private void upload(String userMessage) { 
+      if (userMessage != null && !userMessage.isEmpty()){
          messages.put(messageId, userMessage);
          try {
             myDataSocket.sendMessage("201 Upload successful\nMessage ID: " + messageId);
@@ -100,7 +100,7 @@ class EchoServerThread implements Runnable {
          }
       } else {
          try {
-            myDataSocket.sendMessage("400 Bad Request\nAttempted to upload a null message.");
+            myDataSocket.sendMessage("202 Upload unsuccessful\nAttempted to upload a null message.");
          } catch (IOException e) {
             log.severe("Error sending error message: " + e.getMessage());
          }
