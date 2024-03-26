@@ -16,12 +16,12 @@ public class EchoClient2 {
    public static void main(String[] args) {
 
       // Load truststore from PEM file
-      System.setProperty("javax.net.ssl.trustStore", "client/certificate.pem");
-      System.setProperty("javax.net.ssl.trustStoreType", "PEM");
+      System.setProperty("javax.net.ssl.trustStore", "client/client_truststore.jks");
+      System.setProperty("javax.net.ssl.trustStoreType", "JKS");
       System.setProperty("javax.net.ssl.trustStorePassword", "admin123");
 
       try {
-         SSLContext sslContext = SSLContext.getInstance("SSL");
+         SSLContext sslContext = SSLContext.getInstance("TLS");
          sslContext.init(null, null, null);
 
          SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
