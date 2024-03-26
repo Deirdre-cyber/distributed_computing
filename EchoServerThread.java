@@ -4,14 +4,14 @@ import java.util.logging.Logger;
 
 class EchoServerThread implements Runnable {
 
-   MyStreamSocket myDataSocket;
+   private MyStreamSocket myDataSocket;
    private Logger log = Logger.getLogger(EchoServerThread.class.getName());
    private HashMap<Integer, String> messages;
    private int messageId = 100;
 
    EchoServerThread(MyStreamSocket myDataSocket) {
       this.myDataSocket = myDataSocket;
-      messages = new HashMap<Integer, String>();
+      messages = new HashMap<>();
    }
 
    public void run() {
@@ -37,75 +37,59 @@ class EchoServerThread implements Runnable {
 
             } else if (message.startsWith("DOWNLOAD_ALL")) {
                downloadAll();
-            }
-            else if (message.equals("LOGOUT")) {
+            } else if (message.equals("LOGOUT")) {
                myDataSocket.sendMessage("Logout successful");
                done = true;
-            }
-            else {
+            } else {
                myDataSocket.sendMessage("Invalid command");
             }
          }
       } catch (Exception ex) {
-         System.out.println("Exception caught in thread: " + ex);
+         log.severe("Exception caught in thread: " + ex);
       }
    }
 
    private void downloadAll() {
-      if (messages.isEmpty()) {
-         try {
+      try {
+         if (messages.isEmpty()) {
             myDataSocket.sendMessage("402 No messages available");
-         } catch (IOException e) {
-            log.severe("403 Download unsuccessful\nPlease try again\n Check logs for details");
-            log.info(e.getMessage());
-         }
-      } else {
-         try {
+         } else {
             StringBuilder allMessages = new StringBuilder();
             for (int key : messages.keySet()) {
                allMessages.append(key + ": " + messages.get(key) + " \n");
             }
             myDataSocket.sendMessage("401 Download of all messages successful\n" + allMessages.toString());
-         } catch (IOException e) {
-            log.severe("403 Download unsuccessful\nPlease try again\nCheck logs for details");
-            log.info(e.getMessage());
          }
+      } catch (IOException e) {
+         log.severe("Error sending all messages: " + e.getMessage());
       }
    }
 
    private void download(int id) {
-      if (messages.containsKey(id)) {
-         try {
+      try {
+         if (messages.containsKey(id)) {
             myDataSocket.sendMessage("301 Download of message " + id + " successful\nMessage: " + messages.get(id));
-         } catch (IOException e) {
-            log.severe("303 Download of message " + id + " unsuccessful\nPlease try again\nCheck logs for details");
-            log.info(e.getMessage());
-         }
-      } else {
-         try {
+         } else {
             myDataSocket.sendMessage("302 Download unsuccessful\nMessage ID not found");
-         } catch (IOException e) {
-            log.severe("303 Download unsuccessful\nPlease try again\nCheck logs for details");
-            log.info(e.getMessage());
+         }
+      } catch (IOException e) {
+         log.severe("Error sending message: " + e.getMessage());
          }
       }
-   }
 
-   private void upload(String userMessage) {
-      messages.put(messageId, userMessage);
-      try {
-         myDataSocket.sendMessage("201 Upload successful\nMessage ID: " + messageId);
-         messageId++;
-      } catch (IOException e) {
-         log.severe("202 Upload unsuccessful\nPlease try again\nCheck logs for details");
-         log.info(e.getMessage());
-      }	
-   }
+      private void upload(String userMessage) {
+         messages.put(messageId, userMessage);
+         try {
+            myDataSocket.sendMessage("201 Upload successful\nMessage ID: " + messageId);
+            messageId++;
+         } catch (IOException e) {
+            log.severe("Error sending message: " + e.getMessage());
+         }
+      }
 
    private void login(String credentials) {
       try {
          String[] parts = credentials.split(" ");
-
          if (parts.length != 2 || parts == null) {
             myDataSocket.sendMessage("103 Invalid credentials format\nMust be 'username password'");
             log.warning("Invalid credentials format: " + credentials);

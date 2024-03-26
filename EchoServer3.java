@@ -3,7 +3,7 @@ import java.util.logging.Logger;
 
 public class EchoServer3 {
    public static void main(String[] args) {
-      Logger log = Logger.getLogger("EchoServer3");	
+      Logger log = Logger.getLogger(EchoServer3.class.getName());	
       int serverPort = 7;
 
       if (args.length == 1)
@@ -22,11 +22,10 @@ public class EchoServer3 {
          }
       }
       catch (SocketException sx) {
-         log.severe("Connection lost with client: " + sx);
+         log.severe("Connection lost with client: " + sx.getMessage());
       }
       catch (Exception ex) {
-         log.severe("Exception occurred while running server: " + ex);
-         ex.printStackTrace();
+         log.severe("Exception occurred while running server: " + ex.getMessage());
       }
    }
 }
