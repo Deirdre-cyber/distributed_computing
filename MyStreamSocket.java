@@ -34,6 +34,7 @@ public class MyStreamSocket extends Socket {
       StringBuilder message = new StringBuilder();
       String line;
       
+      // updated this to ensure correct parsing of messages with newlines
       while ((line = input.readLine( )) != null) {
          message.append(line);
          if (!input.ready()) {

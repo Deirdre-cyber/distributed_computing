@@ -7,7 +7,6 @@ public class EchoClient2 {
    private static Logger log = Logger.getLogger(EchoClient2.class.getName());
 
    public static void main(String[] args) {
-
       try (InputStreamReader is = new InputStreamReader(System.in);
             BufferedReader br = new BufferedReader(is);) {
          System.out.println("Welcome! \nWhat is the name of the server host?\n");
@@ -18,7 +17,7 @@ public class EchoClient2 {
          String portNum = br.readLine();
          if (portNum.length() == 0)
             portNum = "7";
-
+        
          EchoClientHelper2 helper = new EchoClientHelper2(hostName, portNum);
 
          boolean done = false;
@@ -27,7 +26,8 @@ public class EchoClient2 {
          boolean loggedIn = false;
 
          while (!loggedIn) {
-            System.out.println("Please enter your username and password:");
+            textArea.append("Please enter your username and password:\n");
+            //System.out.println("Please enter your username and password:");
             String credentials = br.readLine();
 
             String loginResult = helper.login(credentials);
@@ -70,9 +70,10 @@ public class EchoClient2 {
                   break;
             }
          }
-      } catch (Exception ex) {
-         log.severe("An error occurred." + ex.getMessage());
-         System.out.println("An error occurred.");
+      }
+      catch (Exception ex) {
+         log.severe("No connection to server. Please try again later: " + ex.getMessage());
+
       }
    }
 }
