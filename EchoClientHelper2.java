@@ -4,13 +4,6 @@ import javax.net.ssl.SSLSocket;
 
 import java.io.*;
 
-/**
- * This class is a module which provides the application logic
- * for an Echo client using stream-mode socket.
- * 
- * @author M. L. Liu
- */
-
 public class EchoClientHelper2 {
 
    private MyStreamSocket mySocket;
@@ -23,11 +16,10 @@ public class EchoClientHelper2 {
 
       this.serverHost = InetAddress.getByName(hostName);
       this.serverPort = Integer.parseInt(portNum);
-      // Instantiates a stream-mode socket and wait for a connection.
       this.mySocket = new MyStreamSocket(this.serverHost,
             this.serverPort);
-      /**/ System.out.println("Connection request made");
-   } // end constructor
+      System.out.println("Connection request made");
+   }
 
    public String login(String credentials) throws SocketException, IOException {
       String login = "LOGIN " + credentials;
@@ -64,4 +56,4 @@ public class EchoClientHelper2 {
       return response;
       
    }
-} // end class
+}

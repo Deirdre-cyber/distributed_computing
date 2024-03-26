@@ -2,17 +2,6 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-/**
- * This module is to be used with a concurrent Echo server.
- * Its run method carries out the logic of a client session.
- * 
- * @author M. L. Liu
- */
-
-// This class represents a single client session
-// It handles the logic of receiving messages from the client, possibly
-// processing them, and sending back responses.
-
 class EchoServerThread implements Runnable {
 
    MyStreamSocket myDataSocket;
@@ -60,7 +49,6 @@ class EchoServerThread implements Runnable {
       } catch (Exception ex) {
          System.out.println("Exception caught in thread: " + ex);
       }
-
    }
 
    private void downloadAll() {
@@ -138,9 +126,7 @@ class EchoServerThread implements Runnable {
       }
    }
 
-   // added for 'authentication' of user
    private boolean authenticate(String username, String password) {
       return username.equals("admin") && password.equals("admin");
    }
-
-} // end class
+}

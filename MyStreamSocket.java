@@ -1,15 +1,6 @@
 import java.net.*;
 import java.io.*;
 
-/**
- * A wrapper class of Socket which contains 
- * methods for sending and receiving messages
- * @author M. L. Liu
- */
-
- // This class deals with the communication between clients and the server
- // It handles sending and receiving messages over sockets
-
 public class MyStreamSocket extends Socket {
    private Socket  socket;
    private BufferedReader input;
@@ -29,12 +20,10 @@ public class MyStreamSocket extends Socket {
    }
 
    private void setStreams( ) throws IOException{
-      // get an input stream for reading from the data socket
       InputStream inStream = socket.getInputStream();
       input = 
          new BufferedReader(new InputStreamReader(inStream));
       OutputStream outStream = socket.getOutputStream();
-      // create a PrinterWriter object for character-mode output
       output = 
          new PrintWriter(new OutputStreamWriter(outStream));
    }
@@ -50,6 +39,7 @@ public class MyStreamSocket extends Socket {
       StringBuilder message = new StringBuilder();
       String line;
       
+      // updated this to ensure correct parsing of messages with newlines
       while ((line = input.readLine( )) != null) {
          message.append(line);
          if (!input.ready()) {
