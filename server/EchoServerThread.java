@@ -13,6 +13,8 @@ class EchoServerThread implements Runnable {
    private Logger log = Logger.getLogger(EchoServerThread.class.getName());
    private HashMap<Integer, String> messages;
    private int messageId = 100;
+   private final String TOP_BORDER = "\n-+--+--+-+--+-+--+-+--+--+--+--+-\n";
+   private final String BOTTOM_BORDER = "-+--+--+-+--+-+--+-+--+--+--+--+-";
 
    EchoServerThread(MyStreamSocket myDataSocket) {
       this.myDataSocket = myDataSocket;
@@ -68,10 +70,15 @@ class EchoServerThread implements Runnable {
 
    private void login(String credentials) {
       try {
+         StringBuilder message = new StringBuilder();
+         message.append(TOP_BORDER);
+
          String[] parts = credentials.split(" ");
          if (parts.length != 2 || parts == null) {
-            myDataSocket.sendMessage("103 Invalid credentials format\nMust be 'username password'");
-            log.warning("Invalid credentials format: " + credentials);
+            message.append("| 103 Invalid credentials format |\n| Please try again               |\n| Check logs for details         |\n");
+            message.append(BOTTOM_BORDER);
+            myDataSocket.sendMessage(message.toString());
+            log.warning("Invalid credentials format: " + credentials + "\nMust be 'username password'");
             return;
          }
 
@@ -79,9 +86,11 @@ class EchoServerThread implements Runnable {
          String password = parts[1];
 
          if (authenticate(username, password)) {
-            myDataSocket.sendMessage("101 Login successful\nWelcome to [ protocol name ]");
+            message.append("| 101 Login successful          |\n|  Welcome to [ protocol name ] |\n" + BOTTOM_BORDER);
+            myDataSocket.sendMessage(message.toString());
          } else {
-            myDataSocket.sendMessage("102 Login unsuccessful\nPlease try again\nCheck logs for details");
+            message.append("| 102 Login unsuccessful        |\n| Please try again              |\n| Check logs for details        |\n");
+            myDataSocket.sendMessage(message.toString() + BOTTOM_BORDER);
             log.warning("Login unsuccessful\nIncorrect credentials: " + credentials);
          }
       } catch (IOException e) {
@@ -94,17 +103,22 @@ class EchoServerThread implements Runnable {
    }
 
    private void upload(String userMessage) {
+      StringBuilder message = new StringBuilder();
+      message.append(TOP_BORDER);
+
       if (userMessage != null && !userMessage.isEmpty()) {
          messages.put(messageId, userMessage);
          try {
-            myDataSocket.sendMessage("201 Upload successful\nMessage ID: " + messageId);
+            message.append("| 201 Upload successful         |\n| Message ID: " + messageId + "               |\n");
+            myDataSocket.sendMessage(message.toString() + BOTTOM_BORDER);
             messageId++;
          } catch (IOException e) {
             log.severe("Error sending message: " + e.getMessage());
          }
       } else {
          try {
-            myDataSocket.sendMessage("202 Upload unsuccessful\nAttempted to upload a null message.");
+            message.append("| 202 Upload unsuccessful       |\n| Attempted to upload           |\n| empty message.                |\n" );
+            myDataSocket.sendMessage(message.toString() + BOTTOM_BORDER);
          } catch (IOException e) {
             log.severe("Error sending error message: " + e.getMessage());
          }
@@ -112,11 +126,15 @@ class EchoServerThread implements Runnable {
    }
 
    private void download(int id) {
+      StringBuilder message = new StringBuilder();
+      message.append(TOP_BORDER);
       try {
          if (messages.containsKey(id)) {
-            myDataSocket.sendMessage("301 Download of message " + id + " successful\nMessage: " + messages.get(id));
+            message.append("| 301 Download successful       |\n| Message ID: " + id + "               |\n " + messages.get(id) + " \n");
+            myDataSocket.sendMessage(message.toString() + BOTTOM_BORDER);
          } else {
-            myDataSocket.sendMessage("302 Download unsuccessful\nMessage ID not found");
+            message.append("| 302 Download unsuccessful     |\n| Message ID not found          |\n");
+            myDataSocket.sendMessage(message.toString() + BOTTOM_BORDER);
          }
       } catch (IOException e) {
          log.severe("Error sending message: " + e.getMessage());
@@ -124,15 +142,19 @@ class EchoServerThread implements Runnable {
    }
 
    private void downloadAll() {
+      StringBuilder message = new StringBuilder();
+      message.append(TOP_BORDER);
       try {
          if (messages.isEmpty()) {
-            myDataSocket.sendMessage("402 No messages available");
+            message.append("| 402 No messages available      |\n");
+            myDataSocket.sendMessage(message.toString() + BOTTOM_BORDER);
          } else {
             StringBuilder allMessages = new StringBuilder();
             for (int key : messages.keySet()) {
-               allMessages.append(key + ": " + messages.get(key) + " \n");
+               allMessages.append(" " +key + ": " + messages.get(key) + " \n");
             }
-            myDataSocket.sendMessage("401 Download of all messages successful\n" + allMessages.toString());
+            message.append("| 401 Download of all           |\n| messages successful           |\n");
+            myDataSocket.sendMessage(message.toString() + "\n" + allMessages.toString() + BOTTOM_BORDER);
          }
       } catch (IOException e) {
          log.severe("Error sending all messages: " + e.getMessage());
@@ -140,16 +162,22 @@ class EchoServerThread implements Runnable {
    }
 
    private void logout(){
+      StringBuilder message = new StringBuilder();
+      message.append(TOP_BORDER);
       try {
-         myDataSocket.sendMessage("503 Logout successful\nSee you again soon");
+         message.append("| 503 Logout successful         |\n| See you again soon            |\n");
+         myDataSocket.sendMessage(message.toString() + BOTTOM_BORDER);
       } catch (IOException e) {
          log.severe("Error sending logout message: " + e.getMessage());
       }
    }
 
    private void quit() {
+      StringBuilder message = new StringBuilder();
+      message.append(TOP_BORDER);
       try {
-         myDataSocket.sendMessage("504 Program quit successfully\nGoodbye");
+         message.append("| 504 Program quit successfully |\n| Goodbye                       |\n"); 
+         myDataSocket.sendMessage(message.toString() + BOTTOM_BORDER);
       } catch (IOException e) {
          log.severe("Error sending quit message: " + e.getMessage());
       }
