@@ -4,6 +4,9 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocket;
+
 class EchoServerThread implements Runnable {
 
    private MyStreamSocket myDataSocket;
@@ -21,6 +24,11 @@ class EchoServerThread implements Runnable {
       String message;
 
       try {
+         // ensure ssl is actually being implemented
+         SSLSession sslSession = ((SSLSocket) myDataSocket.getSocket()).getSession();
+         log.info("Protocol: " + sslSession.getProtocol());
+         log.info("Host: " + sslSession.getPeerHost());
+
          while (!done) {
             message = myDataSocket.receiveMessage();
             System.out.println("Received: " + message);
@@ -41,69 +49,20 @@ class EchoServerThread implements Runnable {
             } else if (message.startsWith("DOWNLOAD_ALL")) {
                downloadAll();
 
+            } else if (message.startsWith("LOGOUT")){
+               logout();
+               done = true;
+
             } else if (message.equals("QUIT")) {
                quit();
                done = true;
+
             } else {
                myDataSocket.sendMessage("Invalid command");
             }
          }
       } catch (Exception ex) {
          log.severe("Exception caught in thread: " + ex);
-      }
-   }
-
-   private void quit() {
-      try {
-         myDataSocket.sendMessage("104 Quit successful\nGoodbye");
-      } catch (IOException e) {
-         log.severe("Error sending quit message: " + e.getMessage());
-      }
-   }
-
-   private void downloadAll() {
-      try {
-         if (messages.isEmpty()) {
-            myDataSocket.sendMessage("402 No messages available");
-         } else {
-            StringBuilder allMessages = new StringBuilder();
-            for (int key : messages.keySet()) {
-               allMessages.append(key + ": " + messages.get(key) + " \n");
-            }
-            myDataSocket.sendMessage("401 Download of all messages successful\n" + allMessages.toString());
-         }
-      } catch (IOException e) {
-         log.severe("Error sending all messages: " + e.getMessage());
-      }
-   }
-
-   private void download(int id) {
-      try {
-         if (messages.containsKey(id)) {
-            myDataSocket.sendMessage("301 Download of message " + id + " successful\nMessage: " + messages.get(id));
-         } else {
-            myDataSocket.sendMessage("302 Download unsuccessful\nMessage ID not found");
-         }
-      } catch (IOException e) {
-         log.severe("Error sending message: " + e.getMessage());
-      }
-   }
-
-   private void upload(String userMessage) { 
-      if (userMessage != null && !userMessage.isEmpty()){
-         messages.put(messageId, userMessage);
-         try {
-            myDataSocket.sendMessage("201 Upload successful\nMessage ID: " + messageId);
-            messageId++;
-         } catch (IOException e) {
-            log.severe("Error sending message: " + e.getMessage());
-         }
-      } else {
-         try {
-            myDataSocket.sendMessage("202 Upload unsuccessful\nAttempted to upload a null message.");
-         } catch (IOException e) {
-            log.severe("Error sending error message: " + e.getMessage());
-         }
       }
    }
 
@@ -132,5 +91,67 @@ class EchoServerThread implements Runnable {
 
    private boolean authenticate(String username, String password) {
       return username.equals("admin") && password.equals("admin");
+   }
+
+   private void upload(String userMessage) {
+      if (userMessage != null && !userMessage.isEmpty()) {
+         messages.put(messageId, userMessage);
+         try {
+            myDataSocket.sendMessage("201 Upload successful\nMessage ID: " + messageId);
+            messageId++;
+         } catch (IOException e) {
+            log.severe("Error sending message: " + e.getMessage());
+         }
+      } else {
+         try {
+            myDataSocket.sendMessage("202 Upload unsuccessful\nAttempted to upload a null message.");
+         } catch (IOException e) {
+            log.severe("Error sending error message: " + e.getMessage());
+         }
+      }
+   }
+
+   private void download(int id) {
+      try {
+         if (messages.containsKey(id)) {
+            myDataSocket.sendMessage("301 Download of message " + id + " successful\nMessage: " + messages.get(id));
+         } else {
+            myDataSocket.sendMessage("302 Download unsuccessful\nMessage ID not found");
+         }
+      } catch (IOException e) {
+         log.severe("Error sending message: " + e.getMessage());
+      }
+   }
+
+   private void downloadAll() {
+      try {
+         if (messages.isEmpty()) {
+            myDataSocket.sendMessage("402 No messages available");
+         } else {
+            StringBuilder allMessages = new StringBuilder();
+            for (int key : messages.keySet()) {
+               allMessages.append(key + ": " + messages.get(key) + " \n");
+            }
+            myDataSocket.sendMessage("401 Download of all messages successful\n" + allMessages.toString());
+         }
+      } catch (IOException e) {
+         log.severe("Error sending all messages: " + e.getMessage());
+      }
+   }
+
+   private void logout(){
+      try {
+         myDataSocket.sendMessage("503 Logout successful\nSee you again soon");
+      } catch (IOException e) {
+         log.severe("Error sending logout message: " + e.getMessage());
+      }
+   }
+
+   private void quit() {
+      try {
+         myDataSocket.sendMessage("504 Program quit successfully\nGoodbye");
+      } catch (IOException e) {
+         log.severe("Error sending quit message: " + e.getMessage());
+      }
    }
 }

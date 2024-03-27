@@ -11,6 +11,7 @@ public class EchoClientHelper2 {
    private InetAddress serverHost;
    private int serverPort;
 
+   // constructor needed to achieve ssl
    EchoClientHelper2(SSLSocket sslSocket) throws IOException {
       try {
          this.mySocket = new MyStreamSocket(sslSocket);
@@ -74,6 +75,16 @@ public class EchoClientHelper2 {
          return mySocket.receiveMessage();
       } catch (IOException e) {
          throw new IOException("Error reading all messages: " + e.getMessage());
+      }
+   }
+
+   public String logout() throws IOException {
+      String message = "LOGOUT";
+      try{
+         mySocket.sendMessage(message);
+         return mySocket.receiveMessage();
+      } catch (IOException e) {
+         throw new IOException("Error logging out: " + e.getMessage());
       }
    }
 
