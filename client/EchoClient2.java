@@ -19,7 +19,9 @@ public class EchoClient2 {
       SSLSocket sslSocket = null;
 
       try {
-         System.out.println("Welcome!");
+         System.out.println("--+--+-+--+-+--+-+--+-+--+-+--+--+--");
+         System.out.println("|         Welcome Client!          |");
+         System.out.println("--+--+-+--+-+--+-+--+-+--+-+--+--+--");
 
          System.setProperty("javax.net.ssl.trustStore", "client/truststore.jks");
          System.setProperty("javax.net.ssl.trustStorePassword", "password");
@@ -39,15 +41,17 @@ public class EchoClient2 {
             String loginResult = helper.login(credentials);
             System.out.println(loginResult);
 
-            if (loginResult.startsWith("101")) {
+            if (loginResult.contains("101")) {
                boolean loggedIn = true;
                while (loggedIn) {
-                  System.out.println("\nPlease choose an option:");
-                  System.out.println("1. Upload a message: ");
-                  System.out.println("2. Read a message: ");
-                  System.out.println("3. Read all messages: ");
-                  System.out.println("4. Logout");
-                  System.out.println("5. Quit");
+                  System.out.println("-+--+-+--+-+--+-+--+-+--+-+--+--+-");
+                  System.out.println("| Please choose an option:       |");
+                  System.out.println("| 1. Upload a message            |");
+                  System.out.println("| 2. Read a message              |");
+                  System.out.println("| 3. Read all messages           |");
+                  System.out.println("| 4. Logout                      |");
+                  System.out.println("| 5. Quit                        |");
+                  System.out.println("-+--+-+--+-+--+-+--+-+--+-+--+--+-");
 
                   message = br.readLine();
 

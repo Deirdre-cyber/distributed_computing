@@ -15,7 +15,7 @@ public class EchoClientHelper2 {
    EchoClientHelper2(SSLSocket sslSocket) throws IOException {
       try {
          this.mySocket = new MyStreamSocket(sslSocket);
-         System.out.println("Connection request made");
+         System.out.println("\n----+-Connection request made-+----\n");
       } catch (UnknownHostException e) {
          throw new IOException ("Unknown host: " + e.getMessage());
       } catch (SocketException e) {
@@ -23,12 +23,13 @@ public class EchoClientHelper2 {
       }
    }
 
+   // not necessary with ssl but kept for reference
    EchoClientHelper2(String hostName, String portNum) throws IOException {
       try {
          this.serverHost = InetAddress.getByName(hostName);
          this.serverPort = Integer.parseInt(portNum);
          this.mySocket = new MyStreamSocket(this.serverHost, this.serverPort);
-         System.out.println("Connection request made");
+         System.out.println("\n----+-Connection request made-+----\n");
       } catch (UnknownHostException e) {
          throw new IOException ("Unknown host: " + hostName + "\n" +e.getMessage());
       } catch (SocketException e) {
