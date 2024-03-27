@@ -1,7 +1,6 @@
 package server;
 
 import java.io.FileInputStream;
-import java.net.*;
 import java.security.KeyStore;
 import java.util.logging.Logger;
 
@@ -9,8 +8,6 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocket;
-
 public class EchoServer3 {
 
    private static Logger log = Logger.getLogger(EchoServer3.class.getName());
@@ -38,7 +35,6 @@ public class EchoServer3 {
          while (true) {
             System.out.println("Waiting for a connection.");
             MyStreamSocket myDataSocket = new MyStreamSocket(sslServerSocket.accept());
-            System.out.println("SSL Connection accepted.");
 
             Thread theThread = new Thread(new EchoServerThread(myDataSocket));
             theThread.start();

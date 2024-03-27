@@ -11,8 +11,8 @@ public class MyStreamSocket extends Socket {
       socket = new Socket(acceptorHost, acceptorPort );
       setStreams( );
    }
-
-   MyStreamSocket(Socket socket) throws IOException {
+   // constructor needed to achieve ssl
+   public MyStreamSocket(Socket socket) throws IOException {
       this.socket = socket;
       setStreams( );
    }
@@ -22,6 +22,11 @@ public class MyStreamSocket extends Socket {
       input = new BufferedReader(new InputStreamReader(inStream));
       OutputStream outStream = socket.getOutputStream();
       output = new PrintWriter(new OutputStreamWriter(outStream));
+   }
+
+   // ensure ssl is actually being implemented
+   public Socket getSocket( ) {
+      return socket;
    }
 
    public void sendMessage(String message) throws IOException {	
