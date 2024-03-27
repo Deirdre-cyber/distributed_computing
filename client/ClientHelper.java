@@ -5,14 +5,14 @@ import javax.net.ssl.SSLSocket;
 
 import java.io.*;
 
-public class EchoClientHelper2 {
+public class ClientHelper {
 
    private MyStreamSocket mySocket;
    private InetAddress serverHost;
    private int serverPort;
 
    // constructor needed to achieve ssl
-   EchoClientHelper2(SSLSocket sslSocket) throws IOException {
+   ClientHelper(SSLSocket sslSocket) throws IOException {
       try {
          this.mySocket = new MyStreamSocket(sslSocket);
          System.out.println("\n----+-Connection request made-+----\n");
@@ -24,7 +24,7 @@ public class EchoClientHelper2 {
    }
 
    // not necessary with ssl but kept for reference
-   EchoClientHelper2(String hostName, String portNum) throws IOException {
+   ClientHelper(String hostName, String portNum) throws IOException {
       try {
          this.serverHost = InetAddress.getByName(hostName);
          this.serverPort = Integer.parseInt(portNum);
@@ -44,7 +44,7 @@ public class EchoClientHelper2 {
          mySocket.sendMessage(login);
       return mySocket.receiveMessage();
       } catch (IOException e) {
-         return "Error loggin in: " + e.getMessage();
+         return "Error logging in: " + e.getMessage();
       }
    }
 

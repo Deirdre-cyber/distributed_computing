@@ -6,9 +6,9 @@ import java.util.logging.Logger;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
-public class EchoClient2 {
+public class Client {
 
-   private static Logger log = Logger.getLogger(EchoClient2.class.getName());
+   private static Logger log = Logger.getLogger(Client.class.getName());
    private static final String DEFAULT_HOST = "localhost";
    private static final String DEFAULT_PORT = "7";
 
@@ -33,7 +33,7 @@ public class EchoClient2 {
 
          while (!done) {
             sslSocket = (SSLSocket) sslSocketFactory.createSocket(DEFAULT_HOST, Integer.parseInt(DEFAULT_PORT));
-            EchoClientHelper2 helper = new EchoClientHelper2(sslSocket);
+            ClientHelper helper = new ClientHelper(sslSocket);
 
             System.out.println("Please enter your username and password:");
             String credentials = br.readLine();

@@ -7,16 +7,16 @@ import java.util.logging.Logger;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
-class EchoServerThread implements Runnable {
+class ServerThread implements Runnable {
 
    private MyStreamSocket myDataSocket;
-   private Logger log = Logger.getLogger(EchoServerThread.class.getName());
+   private Logger log = Logger.getLogger(ServerThread.class.getName());
    private HashMap<Integer, String> messages;
    private int messageId = 100;
    private final String TOP_BORDER = "\n-+--+--+-+--+-+--+-+--+--+--+--+-\n";
    private final String BOTTOM_BORDER = "-+--+--+-+--+-+--+-+--+--+--+--+-";
 
-   EchoServerThread(MyStreamSocket myDataSocket) {
+   ServerThread(MyStreamSocket myDataSocket) {
       this.myDataSocket = myDataSocket;
       messages = new HashMap<>();
    }
@@ -64,7 +64,7 @@ class EchoServerThread implements Runnable {
             }
          }
       } catch (Exception ex) {
-         log.severe("Exception caught in thread: " + ex);
+         log.warning("Exception caught in thread: " + ex);
       }
    }
 
@@ -165,7 +165,7 @@ class EchoServerThread implements Runnable {
       StringBuilder message = new StringBuilder();
       message.append(TOP_BORDER);
       try {
-         message.append("| 503 Logout successful         |\n| See you again soon            |\n");
+         message.append("| 501 Logout successful         |\n| See you again soon            |\n");
          myDataSocket.sendMessage(message.toString() + BOTTOM_BORDER);
       } catch (IOException e) {
          log.severe("Error sending logout message: " + e.getMessage());
@@ -176,7 +176,7 @@ class EchoServerThread implements Runnable {
       StringBuilder message = new StringBuilder();
       message.append(TOP_BORDER);
       try {
-         message.append("| 504 Program quit successfully |\n| Goodbye                       |\n"); 
+         message.append("| 502 Program quit successfully |\n| Goodbye                       |\n"); 
          myDataSocket.sendMessage(message.toString() + BOTTOM_BORDER);
       } catch (IOException e) {
          log.severe("Error sending quit message: " + e.getMessage());

@@ -8,9 +8,10 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
-public class EchoServer3 {
 
-   private static Logger log = Logger.getLogger(EchoServer3.class.getName());
+public class Server {
+
+   private static Logger log = Logger.getLogger(Server.class.getName());
    final static int SERVER_PORT = 7;
 
    public static void main(String[] args) {
@@ -33,10 +34,11 @@ public class EchoServer3 {
          System.out.println("Server ready.");
 
          while (true) {
-            System.out.println("Waiting for a connection.");
+            
             MyStreamSocket myDataSocket = new MyStreamSocket(sslServerSocket.accept());
-
-            Thread theThread = new Thread(new EchoServerThread(myDataSocket));
+            System.out.println("Waiting for a connection.");
+            Thread theThread = new Thread(new ServerThread(myDataSocket));
+            System.out.println("Connection accepted.");
             theThread.start();
          }
       } catch (Exception e) {
