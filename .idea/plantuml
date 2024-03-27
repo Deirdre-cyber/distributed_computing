@@ -1,0 +1,47 @@
+@startuml
+
+package "client" {
+    class Client {
+        -log: Logger
+        -DEFAULT_HOST: String
+        -DEFAULT_PORT: String
+        +main(args: String[]): void
+    }
+    class ClientHelper {
+        -mySocket: MyStreamSocket
+        -serverHost: InetAddress
+        -serverPort: int
+    }
+    class MyStreamSocket {
+        -socket: Socket
+        -input: BufferedReader
+        -output: PrintWriter
+    }
+}
+
+package "server" {
+    class Server {
+        -log: Logger
+        -SERVER_PORT: int
+        +main(args: String[]): void
+    }
+    class MyStreamSocket {
+        -socket: Socket
+        -input: BufferedReader
+        -output: PrintWriter
+    }
+    class ServerThread {
+        -myDataSocket: MyStreamSocket
+        -messages: HashMap<Integer, String>
+        -messageId: int
+        -TOP_BORDER: String
+        -BOTTOM_BORDER: String
+    }
+}
+
+Client --> ClientHelper
+ClientHelper --> MyStreamSocket
+Server --> ServerThread
+ServerThread --> MyStreamSocket
+
+@enduml

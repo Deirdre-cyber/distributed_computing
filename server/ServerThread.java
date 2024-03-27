@@ -86,7 +86,7 @@ class ServerThread implements Runnable {
          String password = parts[1];
 
          if (authenticate(username, password)) {
-            message.append("| 101 Login successful          |\n|  Welcome to [ protocol name ] |\n" + BOTTOM_BORDER);
+            message.append("| 101 Login successful          |\n|  Welcome to SMProtocol        |\n" + BOTTOM_BORDER);
             myDataSocket.sendMessage(message.toString());
          } else {
             message.append("| 102 Login unsuccessful        |\n| Please try again              |\n| Check logs for details        |\n");
