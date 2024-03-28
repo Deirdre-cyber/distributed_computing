@@ -187,8 +187,9 @@ class ServerThread implements Runnable {
       try {
          message.append("| 501 Logout successful         |\n| See you again soon            |\n");
          myDataSocket.sendMessage(message.toString() + BOTTOM_BORDER);
+         myDataSocket.close();
       } catch (IOException e) {
-         log.severe("Error sending logout message: " + e.getMessage());
+         log.severe("Error logging out: " + e.getMessage());
       }
    }
 
@@ -198,8 +199,9 @@ class ServerThread implements Runnable {
       try {
          message.append("| 502 Program quit successfully |\n| Goodbye                       |\n");
          myDataSocket.sendMessage(message.toString() + BOTTOM_BORDER);
+         myDataSocket.close();
       } catch (IOException e) {
-         log.severe("Error sending quit message: " + e.getMessage());
+         log.severe("Error quitting the program: " + e.getMessage());
       }
    }
 }
